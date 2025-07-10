@@ -1,7 +1,10 @@
 import Input from './Input.jsx'
 import { useRef } from 'react'
+import Model from './Modal.jsx';
 
 export default function NewProject({ onAdd }) {
+
+	const modal= useRef();
 
 	const title = useRef();
 	const description = useRef();
@@ -13,6 +16,11 @@ export default function NewProject({ onAdd }) {
 		const enteredDescription = description.current.value;
 		const enteredDueDate = dueDate.current.value;
 
+		if(enteredTitle.trim().length === 0 || enteredDescription.trim().length === 0 || enteredDueDate.trim().length === 0) {
+			modal.current.open();
+			return;
+		}
+
 		onAdd({
 			title: enteredTitle,
 			description: enteredDescription,
@@ -21,7 +29,12 @@ export default function NewProject({ onAdd }) {
 
 	}
 
-	return (
+	return (<>
+	<Model ref={modal} buttonCaption="Close">
+		<h2>Invalid Input</h2>
+		<p>Oops... looks like you forgot to enter a value.</p>
+		<p>Please fill in all fields before saving.</p>
+	</Model>
 		<div className='w-{35rem} mt-16 '>
 			<menu className='flex items-center justify-end gap-4 my-4'>
 				<li>
@@ -37,5 +50,6 @@ export default function NewProject({ onAdd }) {
 				<Input type="date" ref={dueDate} label="Due Date" />
 			</div>
 		</div>
+	</>
 	)
 }
